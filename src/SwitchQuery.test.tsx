@@ -120,7 +120,7 @@ test('renders error function if query has error state', async () => {
   expect(node.queryByTestId('success-view')).not.toBeInTheDocument();
 });
 
-test('supports render function for success state', async () => {
+test('renders render function for success state', async () => {
   const { result } = renderHook(() => useQuery({
     queryKey: ['test-4'],
     queryFn: () => Promise.resolve({ value: 42 }),
@@ -155,4 +155,61 @@ test('supports render function for success state', async () => {
   expect(node.queryByTestId('success-view')).toHaveTextContent('success:42');
   expect(node.queryByTestId('pending-view')).not.toBeInTheDocument();
   expect(node.queryByTestId('error-view')).not.toBeInTheDocument();
+});
+
+test('renders empty state if provided and check succeeds', async () => {
+  const { result } = renderHook(() => useQuery({
+    queryKey: ['test-5'],
+    queryFn: () => Promise.resolve([]),
+  }), { wrapper });
+
+  const ui = (query: typeof result.current) => (
+    <SwitchQuery
+      query={query}
+      pending={<div data-testid="pending-view">loading...</div>}
+      success={<div data-testid="success-view">success</div>}
+      empty={<div data-testid="empty-view">array is empty</div>}
+      checkIsEmpty={data => !Array.isArray(data) || !data.length}
+    />
+  );
+
+  const node = render(ui(result.current));
+
+  expect(result.current.isPending).toBe(true);
+  expect(node.queryByTestId('pending-view')).toBeInTheDocument();
+
+  await waitFor(() => result.current.isSuccess);
+
+  node.rerender(ui(result.current));
+
+  expect(node.queryByTestId('success-view')).not.toBeInTheDocument();
+  expect(node.queryByTestId('empty-view')).toBeInTheDocument();
+  expect(node.queryByTestId('empty-view')).toHaveTextContent('array is empty');
+});
+
+test('renders nothing if no empty state provided and empty check succeeds', async () => {
+  const { result } = renderHook(() => useQuery({
+    queryKey: ['test-6'],
+    queryFn: () => Promise.resolve([]),
+  }), { wrapper });
+
+  const ui = (query: typeof result.current) => (
+    <SwitchQuery
+      query={query}
+      pending={<div data-testid="pending-view">loading...</div>}
+      success={<div data-testid="success-view">success</div>}
+      checkIsEmpty={data => !Array.isArray(data) || !data.length}
+    />
+  );
+
+  const node = render(ui(result.current));
+
+  expect(result.current.isPending).toBe(true);
+  expect(node.queryByTestId('pending-view')).toBeInTheDocument();
+
+  await waitFor(() => result.current.isSuccess);
+
+  node.rerender(ui(result.current));
+
+  expect(node.container.firstChild).toBeNull();
 });
