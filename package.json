@@ -2,6 +2,12 @@
   "name": "switch-query",
   "version": "0.0.0",
   "license": "MIT",
+  "author": "Mikhail Panichev <denis.invader@gmail.com>",
+  "repository": "github:denisinvader/switch-query",
+  "bugs": {
+    "url": "https://github.com/denisinvader/switch-query/issues",
+    "email": "example@npmjs.com"
+  },
   "type": "module",
   "main": "dist/SwitchQuery.js",
   "types": "dist/SwitchQuery.d.ts",
