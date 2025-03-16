@@ -15,8 +15,8 @@ type QueryPending<D, E> = (
   | QueryObserverLoadingResult<D, E>
 );
 type QueryError<D, E> = (
-  | QueryObserverLoadingErrorResult<D, Defined<E>>
-  | QueryObserverRefetchErrorResult<D, Defined<E>>
+  | QueryObserverLoadingErrorResult<D, Defined<E extends null ? Exclude<E, null> : E>>
+  | QueryObserverRefetchErrorResult<D, Defined<E extends null ? Exclude<E, null> : E>>
 );
 type RenderProp<TQuery> = ReactNode | ((query: TQuery) => ReactNode);
 
