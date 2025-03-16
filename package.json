@@ -5,11 +5,13 @@
   "type": "module",
   "main": "dist/SwitchQuery.js",
   "types": "dist/SwitchQuery.d.ts",
+  "files": ["dist/**/*"],
   "scripts": {
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepublishOnly": "tsc -b && eslint src && vitest run && vite build"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5 || ^4",
