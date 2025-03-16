@@ -21,11 +21,34 @@ type QueryError<D, E> = (
 type RenderProp<TQuery> = ReactNode | ((query: TQuery) => ReactNode);
 
 export interface SwitchQueryProps<TData, TError, TQuery extends UseQueryResult<TData, TError>> {
+  /**
+    * React Query object returned from `useQuery`.
+    */
   query: TQuery & UseQueryResult<TData, TError>;
+  /**
+    * Success state render function or node.
+    * `query.data` is defined.
+    */
   success?: RenderProp<QuerySuccess<TData, TError>>;
+  /**
+    * Empty state render function or node.
+    * Renders when `checkIsEmpty` returns `true`.
+    * `query.data` is defined (but empty).
+    */
   empty?: RenderProp<QuerySuccess<TData, TError>>;
+  /**
+    * Pending state render function or node.
+    * `query.status === "pending"` or `query.isPending === true`.
+    */
   pending?: RenderProp<QueryPending<TData, TError>>;
+  /**
+    * Error state render function or node.
+    * `query.error` is defined.
+    */
   error?: RenderProp<QueryError<TData, TError>>;
+  /**
+    * Optional function to check that defined data in success state is empty to render `empty` prop.
+    */
   checkIsEmpty?: (data: Defined<TData>) => boolean;
 }
 
